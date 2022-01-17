@@ -5,6 +5,7 @@
     "node": ">=v16.13",
     "npm": ">=8.1"
   },
+  "author": "John Doe <john@doe.com>",
   "main": "packages/main/dist/index.cjs",
   "scripts": {
     "build": "npm run build:main && npm run build:preload && npm run build:renderer",
@@ -46,7 +47,9 @@
     "vue-tsc": "0.30.5"
   },
   "dependencies": {
+    "@typescript-eslint/parser": "^5.9.1",
     "electron-updater": "4.6.5",
+    "sqlite3": "^5.0.2",
     "vue": "3.2.27"
   }
 }

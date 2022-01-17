@@ -1,8 +1,11 @@
-import {BrowserWindow} from 'electron';
-import {join} from 'path';
-import {URL} from 'url';
+import { BrowserWindow, app } from 'electron';
+import { join } from 'path';
+import { URL } from 'url';
+
+const sqlite3 = require('sqlite3').verbose();
 
 async function createWindow() {
+
   const browserWindow = new BrowserWindow({
     show: false, // Use 'ready-to-show' event to show window
     webPreferences: {
@@ -24,6 +27,27 @@ async function createWindow() {
     if (import.meta.env.DEV) {
       browserWindow?.webContents.openDevTools();
     }
+
+    const userData = app.getPath('userData');
+
+    console.log(userData, 'database path');
+  
+    const db = new sqlite3.Database(`${userData}/dentaldrive.db`);
+
+    db.serialize(function () {
+      db.run('CREATE TABLE  if not exists lorem (info TEXT)');
+
+      const stmt = db.prepare('INSERT INTO lorem VALUES (?)');
+      for (let i = 0; i < 50; i++) {
+        stmt.run('Ipsum ' + i);
+      }
+      stmt.finalize();
+
+      db.each('SELECT rowid AS id, info FROM lorem', function (err, row) {
+        console.log(row.id + ': ' + row.info);
+      });
+    });
+
   });
 
   /**
